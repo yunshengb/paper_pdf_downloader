@@ -1,6 +1,6 @@
 import os
-
 import requests
+from tqdm import tqdm
 
 
 def download_pdf(url, name):
@@ -17,14 +17,13 @@ def download_pdf(url, name):
     r.close()
 
 
-from tqdm import tqdm
 def loop(save_dir_nips):
     import openreview
 
     # API V2
     client = openreview.api.OpenReviewClient(
         baseurl='https://api2.openreview.net',
-        username='yba@g.ucla.edu',
+        username='<TODO>',
         password=''
     )
 
@@ -34,11 +33,10 @@ def loop(save_dir_nips):
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
 
-
         accepted_submissions = client.get_all_notes(content={'venueid': f'NeurIPS.cc/2023/{type}'})
 
         for accepted_submission in tqdm(sorted(accepted_submissions, key=lambda x: x.number)):
-            i += 1 # 1-based indexing
+            i += 1  # 1-based indexing
             title = accepted_submission.content['title']['value']
 
             title = title.replace('/', '_')
@@ -48,6 +46,7 @@ def loop(save_dir_nips):
             # author_profiles = openreview.tools.get_profiles(client, accepted_submission.content['authorids']['value'])
             # for author_profile in author_profiles:
             #     print(author_profile.get_preferred_name(pretty=True), author_profile.content.get('history', [{}])[0])
+
 
 if __name__ == '__main__':
     year = 2023
